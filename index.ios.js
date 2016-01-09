@@ -12,6 +12,7 @@ var {
 } = React;
 
 var Twilio = require('react-native-twilio');
+var communication = require('./AKCommunications');
 
 var WeeFeePhone = React.createClass({
 
