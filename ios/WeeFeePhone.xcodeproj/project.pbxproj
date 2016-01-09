@@ -29,6 +29,7 @@
 		53CAD7F91C40E8BA005035F1 /* libRCTTwilio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53CAD7F51C40E851005035F1 /* libRCTTwilio.a */; };
 		53CAD8001C40F8CE005035F1 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53CAD7FF1C40F8C0005035F1 /* libART.a */; };
 		53CAD8091C418D41005035F1 /* FontAwesomeKit in Resources */ = {isa = PBXBuildFile; fileRef = 53CAD8081C418D41005035F1 /* FontAwesomeKit */; };
+		53CAD82C1C419960005035F1 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53CAD82B1C418E70005035F1 /* libRNVectorIcons.a */; };
 		6D26392FF0944B03B781C8DB /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 770E68EAA8694FFAABD224D5 /* Ionicons.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		DA8002A2EE674A138ECBA9B6 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 37C66450E6254757BEACE2C8 /* Entypo.ttf */; };
@@ -209,6 +210,7 @@
 				53CAD8001C40F8CE005035F1 /* libART.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				42A72355332640B6A30ED3BD /* libReactNativeIcons.a in Frameworks */,
+				53CAD82C1C419960005035F1 /* libRNVectorIcons.a in Frameworks */,
 				17A488519E2046D09D0B0A5F /* libRNVectorIcons.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

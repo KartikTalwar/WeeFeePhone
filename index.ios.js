@@ -4,14 +4,13 @@ var React = require('react-native');
 var {
   Text,
   View,
+  Image,
   StyleSheet,
   AppRegistry,
   TouchableWithoutFeedback,
 } = React;
 
 var Twilio = require('react-native-twilio');
-var Icon = require('react-native-vector-icons/FontAwesome');
-
 
 
 var WeeFeePhone = React.createClass({
@@ -37,7 +36,10 @@ var WeeFeePhone = React.createClass({
 
   _makeCall: function() {
     var number = this.state.displayNumber.join('');
-    Twilio.connect({To: '+1'+number, From:"client:+16472780938"});
+    Twilio.connect({
+                     To : '+1'+number,
+                     From : "client:+16472780938"
+                   });
   },
 
 
@@ -192,11 +194,9 @@ var WeeFeePhone = React.createClass({
                 underlayColor={"#eee"}
                 onPress={this._makeCall}>
               <View style={[styles.dialPadKey, {marginRight: 25,}]}>
-                <Icon
-                  name="phone"
-                  size={40}
-                  color="#000"
-                  style={[styles.dialPadNumber, styles.callButton]}/>
+                <Image
+                  source={{uri: 'http://i.imgur.com/Nlx1WZg.jpg'}}
+                  style={[styles.callButton]}/>
               </View>
             </TouchableWithoutFeedback>
 
@@ -249,11 +249,21 @@ var styles = StyleSheet.create({
     paddingLeft: 15,
   },
   callButton: {
+    overflow: 'hidden',
+    flex:1,
+    borderRadius: 33,
+    alignItems:'center',
+    paddingTop: 10,
+    borderColor: '#686869',
+    paddingBottom: 10,
+    paddingRight: 15,
+    paddingLeft: 15,
+
     backgroundColor: '#4CDA64',
-    color: '#fff',
     borderWidth: 0,
     marginTop: 1,
   },
 });
+
 
 AppRegistry.registerComponent('WeeFeePhone', () => WeeFeePhone);
