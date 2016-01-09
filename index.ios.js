@@ -24,17 +24,20 @@ var WeeFeePhone = React.createClass({
   },
 
 
-  _connectionDidStartConnecting: function () {
+  _connectionDidStartConnecting: function (params) {
+    console.log("_connectionDidStartConnecting", params)
     this.setState({onCallMessage: "Connecting...", currentlyOnCall: true})
   },
 
 
-  _connectionDidConnect: function() {
+  _connectionDidConnect: function(params) {
+    console.log("_connectionDidConnect", params)
     this.setState({onCallMessage: "Currently Calling"})
   },
 
 
-  _connectionDidDisconnect: function() {
+  _connectionDidDisconnect: function(params) {
+    console.log("_connectionDidDisconnect", params)
     this.setState({onCallMessage: "Call Ended", currentlyOnCall: false})
   },
 
@@ -42,13 +45,41 @@ var WeeFeePhone = React.createClass({
   getInitialState: function() {
     return {
             displayNumber: [6,4,7,2,7,8,0,9,3,8],
-            currentlyOnCall: true,
+            currentlyOnCall: false,
             onCallMessage: "Currently Calling",
+            connectionInfo: null,
            }
   },
 
+
+  componentDidMount: function() {
+    NetInfo.addEventListener(
+        'change',
+        this._handleConnectionInfoChange
+    );
+    NetInfo.fetch().done(
+        (connectionInfo) => { this.setState({connectionInfo: connectionInfo}); }
+    );
+  },
+
+
+  componentWillUnmount: function() {
+    NetInfo.removeEventListener(
+        'change',
+        this._handleConnectionInfoChange
+    );
+  },
+
+
+  _handleConnectionInfoChange: function(connectionInfo) {
+    this.setState({
+      connectionInfo: connectionInfo,
+    });
+  },
+
+
   _makeCall: function() {
-    var currentConnection = ConnectionInfoCurrent.state.connectionInfo;
+    var currentConnection = this.state.connectionInfo;
     var number = this.state.displayNumber.join('');
     if (currentConnection !== 'wifi') {
       communication.phonecall(number, false);
@@ -387,26 +418,7 @@ const ConnectionInfoCurrent = React.createClass({
       connectionInfo: null,
     };
   },
-  componentDidMount: function() {
-    NetInfo.addEventListener(
-        'change',
-        this._handleConnectionInfoChange
-    );
-    NetInfo.fetch().done(
-        (connectionInfo) => { this.setState({connectionInfo}); }
-    );
-  },
-  componentWillUnmount: function() {
-    NetInfo.removeEventListener(
-        'change',
-        this._handleConnectionInfoChange
-    );
-  },
-  _handleConnectionInfoChange: function(connectionInfo) {
-    this.setState({
-      connectionInfo,
-    });
-  },
+
   render() {
     return (
         <View>
@@ -415,4 +427,6 @@ const ConnectionInfoCurrent = React.createClass({
     );
   }
 });
+
+
 AppRegistry.registerComponent('WeeFeePhone', () => WeeFeePhone);
