@@ -17,19 +17,33 @@ var WeeFeePhone = React.createClass({
 
   componentWillMount: function() {
     Twilio.initWithTokenUrl('http://weefeephone.herokuapp.com/token');
-    // Twilio.addEventListener('deviceDidStartListening', this._deviceDidStartListening);
-    // Twilio.addEventListener('deviceDidStopListening', this._deviceDidStopListening);
-    // Twilio.addEventListener('deviceDidReceiveIncoming', this._deviceDidReceiveIncoming);
-    // Twilio.addEventListener('connectionDidStartConnecting', this._connectionDidStartConnecting);
-    // Twilio.addEventListener('connectionDidConnect', this._connectionDidConnect);
-    // Twilio.addEventListener('connectionDidDisconnect', this._connectionDidDisconnect);
-    // Twilio.addEventListener('connectionDidFail', this._connectionDidFail);
+    Twilio.addEventListener('connectionDidStartConnecting', this._connectionDidStartConnecting);
+    Twilio.addEventListener('connectionDidConnect', this._connectionDidConnect);
+    Twilio.addEventListener('connectionDidDisconnect', this._connectionDidDisconnect);
+    Twilio.addEventListener('connectionDidFail', this._connectionDidFail);
+  },
+
+
+  _connectionDidStartConnecting: function () {
+    this.setState({onCallMessage: "Connecting...", currentlyOnCall: true})
+  },
+
+
+  _connectionDidConnect: function() {
+    this.setState({onCallMessage: "Currently Calling"})
+  },
+
+
+  _connectionDidDisconnect: function() {
+    this.setState({onCallMessage: "Call Ended", currentlyOnCall: false})
   },
 
 
   getInitialState: function() {
     return {
             displayNumber: [6,4,7,2,7,8,0,9,3,8],
+            currentlyOnCall: true,
+            onCallMessage: "Currently Calling",
            }
   },
 
@@ -57,8 +71,12 @@ var WeeFeePhone = React.createClass({
   },
 
 
-  render: function() {
+  _hangUp: function() {
+    this.setState({currentlyOnCall: false})
+  },
 
+
+  render: function() {
     var deleteKey = (
                      <View style={[styles.dialPadKey, {marginRight: 25}]}></View>
                     );
@@ -78,6 +96,48 @@ var WeeFeePhone = React.createClass({
                   )
     }
 
+    if (this.state.currentlyOnCall) {
+      return this.renderOnCall();
+    } else {
+      return this.renderDialPad(deleteKey);
+    }
+  },
+
+
+  renderOnCall: function() {
+    return (
+
+      <View style={[styles.container, {backgroundColor: 'black'}]}>
+
+        <View style={{marginBottom: 40}}>
+          <Text style={[styles.displayNumber, {color: 'grey'}]}>
+            Currently Calling
+          </Text>
+          <Text style={[styles.displayNumber, {color: 'white'}]}>
+            {this.state.displayNumber}
+          </Text>
+        </View>
+
+        <View style={{}}>
+          <TouchableWithoutFeedback
+                activeOpacity={0}
+                underlayColor={"#eee"}
+                onPress={this._hangUp}>
+            <View style={[styles.dialPadKey, {marginRight: 25,}]}>
+              <Image
+                source={{uri: 'http://i.imgur.com/U3YIbYD.png'}}
+                style={[styles.callButton]}/>
+            </View>
+          </TouchableWithoutFeedback>
+
+        </View>
+
+      </View>
+      )
+  },
+
+
+  renderDialPad: function(deleteKey) {
     return (
       <View style={styles.container}>
 
