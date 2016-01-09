@@ -1,0 +1,3 @@
+rootProject.name = 'WeeFeePhone'
+
+include ':app'

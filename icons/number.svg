@@ -1,0 +1,6 @@
+<svg width="960" height="500">
+    <g transform="translate(80,80)">
+        <circle r="40" stroke="black" fill="white"></circle>
+        <text dx="-20">Node 1</text>
+    </g>
+</svg>
