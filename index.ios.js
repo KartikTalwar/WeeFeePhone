@@ -6,12 +6,12 @@ var {
   NetInfo,
   Text,
   View,
+  Image,
   StyleSheet,
   TouchableWithoutFeedback,
 } = React;
 
 var Twilio = require('react-native-twilio');
-//var Communications = require('react-native-communications');
 
 var WeeFeePhone = React.createClass({
 
@@ -39,7 +39,10 @@ var WeeFeePhone = React.createClass({
     if (currentConnection !== 'wifi') {
       communication.phonecall(number, false);
     } else {
-      Twilio.connect({To: '+1'+number, From:"client:+16472780938"});
+      Twilio.connect({
+                      To: '+1'+number, 
+                      From:"client:+16472780938"
+                    });
     }
   },
 
@@ -51,13 +54,40 @@ var WeeFeePhone = React.createClass({
   },
 
 
+  _deleteDigit: function() {
+    var newNumber = this.state.displayNumber;
+    newNumber.pop();
+    this.setState({displayNumber: newNumber});
+  },
+
+
   render: function() {
+    var deleteKey = (
+                     <View style={[styles.dialPadKey, {marginRight: 25}]}></View>
+                    );
+
+    if (this.state.displayNumber.length > 0) {
+      deleteKey = (
+                    <TouchableWithoutFeedback
+                      activeOpacity={0}
+                      underlayColor={"#eee"}
+                      onPress={this._deleteDigit}>
+                    <View style={[styles.dialPadKey, {marginRight: 25,}]}>
+                      <Image
+                        source={{uri: 'http://i.imgur.com/2tPm0sE.png'}}
+                        style={[styles.deleteKey]}/>
+                    </View>
+                  </TouchableWithoutFeedback>
+                  )
+    }
 
     return (
       <View style={styles.container}>
 
         <View style={styles.phoneNumber}>
-          <Text style={styles.displayNumber}>{this.state.displayNumber}</Text>
+          <Text style={styles.displayNumber}>
+            {this.state.displayNumber}
+          </Text>
         </View>
 
         <View style={styles.dialPad}>
@@ -189,14 +219,16 @@ var WeeFeePhone = React.createClass({
 
           <View style={styles.dialPadRow}>
 
-            <View style={[styles.dialPadKey, {marginRight: 25}]}></View>
+            {deleteKey}
 
             <TouchableWithoutFeedback
                 activeOpacity={0}
                 underlayColor={"#eee"}
                 onPress={this._makeCall}>
               <View style={[styles.dialPadKey, {marginRight: 25,}]}>
-                
+                <Image
+                  source={{uri: 'http://i.imgur.com/Nlx1WZg.jpg'}}
+                  style={[styles.callButton]}/>
               </View>
             </TouchableWithoutFeedback>
             <View style={[styles.dialPadKey, {marginRight: 25}]}></View>
@@ -215,6 +247,19 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+  },
+  phoneNumber: {
+    // backgroundColor: 'red',
+    flexDirection: 'row',
+    width: 300,
+    height: 50,
+    marginBottom: 20,
+  },
+  displayNumber: {
+    color: '000',
+    width: 280,
+    fontSize: 35,
+    textAlign: 'center'
   },
   dialPadRow: {
     alignItems: 'flex-start',
@@ -248,8 +293,28 @@ var styles = StyleSheet.create({
     paddingLeft: 15,
   },
   callButton: {
+    overflow: 'hidden',
+    flex:1,
+    borderRadius: 33,
+    alignItems:'center',
+    paddingTop: 10,
+    borderColor: '#686869',
+    paddingBottom: 10,
+    paddingRight: 15,
+    paddingLeft: 15,
     backgroundColor: '#4CDA64',
-    color: '#fff',
+    borderWidth: 0,
+    marginTop: 1,
+  },
+  deleteKey: {
+    overflow: 'hidden',
+    flex:1,
+    alignItems:'center',
+    paddingTop: 10,
+    borderColor: '#686869',
+    paddingBottom: 10,
+    paddingRight: 15,
+    paddingLeft: 15,
     borderWidth: 0,
     marginTop: 1,
   },
