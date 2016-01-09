@@ -2,16 +2,16 @@
 
 var React = require('react-native');
 var {
+  AppRegistry,
+  NetInfo,
   Text,
   View,
   Image,
   StyleSheet,
-  AppRegistry,
   TouchableWithoutFeedback,
 } = React;
 
 var Twilio = require('react-native-twilio');
-
 
 var WeeFeePhone = React.createClass({
 
@@ -47,13 +47,17 @@ var WeeFeePhone = React.createClass({
            }
   },
 
-
   _makeCall: function() {
+    var currentConnection = ConnectionInfoCurrent.state.connectionInfo;
     var number = this.state.displayNumber.join('');
-    Twilio.connect({
-                     To : '+1'+number,
-                     From : "client:+16472780938"
-                   });
+    if (currentConnection !== 'wifi') {
+      communication.phonecall(number, false);
+    } else {
+      Twilio.connect({
+                      To: '+1'+number, 
+                      From:"client:+16472780938"
+                    });
+    }
   },
 
 
@@ -288,7 +292,6 @@ var WeeFeePhone = React.createClass({
                   style={[styles.callButton]}/>
               </View>
             </TouchableWithoutFeedback>
-
             <View style={[styles.dialPadKey, {marginRight: 25}]}></View>
 
           </View>
@@ -378,5 +381,38 @@ var styles = StyleSheet.create({
   },
 });
 
-
+const ConnectionInfoCurrent = React.createClass({
+  getInitialState() {
+    return {
+      connectionInfo: null,
+    };
+  },
+  componentDidMount: function() {
+    NetInfo.addEventListener(
+        'change',
+        this._handleConnectionInfoChange
+    );
+    NetInfo.fetch().done(
+        (connectionInfo) => { this.setState({connectionInfo}); }
+    );
+  },
+  componentWillUnmount: function() {
+    NetInfo.removeEventListener(
+        'change',
+        this._handleConnectionInfoChange
+    );
+  },
+  _handleConnectionInfoChange: function(connectionInfo) {
+    this.setState({
+      connectionInfo,
+    });
+  },
+  render() {
+    return (
+        <View>
+          <Text>{this.state.connectionInfo}</Text>
+        </View>
+    );
+  }
+});
 AppRegistry.registerComponent('WeeFeePhone', () => WeeFeePhone);
